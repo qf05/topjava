@@ -10,22 +10,6 @@
 <h2>Meals</h2>
 
 <table style="margin: 20px; border-collapse: collapse" border="2px" cellpadding="5px">
-    <caption align="left">Delete</caption>
-    <tr>
-        <th>Id</th>
-        <th>Отправить</th>
-    </tr>
-    <form action="" method="post">
-        <tr>
-            <td><label>
-                <input type="number" name="del">
-            </label></td>
-            <td><input type="submit" value="Отправить"></td>
-        </tr>
-    </form>
-</table>
-
-<table style="margin: 20px; border-collapse: collapse" border="2px" cellpadding="5px">
     <caption>Add</caption>
     <tr>
         <th>Data</th>
@@ -33,7 +17,8 @@
         <th>Calories</th>
         <th>Отправить</th>
     </tr>
-    <form action="" method="post">
+    <form accept-charset="UTF-8"  action="" method="post">
+        <input type="hidden" name="add" value="add">
         <tr>
             <td><label>
                 <input type="datetime-local" name="addDate" placeholder="YYYY-MM-DD'T'hh:mm:ss">
@@ -52,17 +37,14 @@
 <table style="margin: 20px; border-collapse: collapse" border="2px" cellpadding="5px">
     <caption>Redact</caption>
     <tr>
-        <th>id</th>
         <th>Data</th>
         <th>Description</th>
         <th>Calories</th>
         <th>Отправить</th>
     </tr>
-    <form action="" method="post">
+    <form accept-charset="UTF-8"  action="" method="post">
+        <input type="hidden" name="redact" value="redact">
         <tr>
-            <td><label>
-                <input type="number" name="id">
-            </label></td>
             <td><label>
                 <input type="datetime-local" name="reDate" placeholder="YYYY-MM-DD'T'hh:mm:ss">
             </label></td>
@@ -79,7 +61,6 @@
 
 <table style="margin: 20px; border-collapse: collapse" border="2px" cellpadding="10px">
     <tr>
-        <th>id</th>
         <th>Data</th>
         <th>Description</th>
         <th>Calories</th>
@@ -88,17 +69,19 @@
     <c:forEach var="meal" items="${listMeals}">
         <c:set var="color" value="${meal.exceed ? 'red' : 'green'}"/>
         <tr style="color: ${color}">
-            <td>${meal.id}</td>
             <td>${f:formatLocalDateTime(meal.dateTime)}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
+            <td>
+                <form accept-charset="UTF-8" action="" method="post">
+                    <input type="hidden" name="delete" value="delete">
+                    <input type="hidden" value="${meal.id}" name="del">
+                    <input type="submit" value="Удалить">
+                </form>
+            </td>
         </tr>
     </c:forEach>
 </table>
-<dialog>Error!</dialog>
 
-<c:if test="${error!=null}">
-    <dialog>Error!</dialog>
-</c:if>
 </body>
 </html>
