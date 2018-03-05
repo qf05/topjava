@@ -49,7 +49,7 @@ public class MealServlet extends HttpServlet {
                 LocalDateTime date = TimeUtil.timeFormatter(req.getParameter("addDate"));
                 dataBase.add(new Meal(date,req.getParameter("addDis"),
                         Integer.parseInt(req.getParameter("addColories")),
-                        CRUDForMealsFromListIMP.id.incrementAndGet()));
+                        0));
 
                 req.setAttribute("listMeals", MealsUtil.getFilteredWithExceeded(dataBase.getAll(), LocalTime.MIN, LocalTime.MAX, 2000));
                 req.getRequestDispatcher("/meals.jsp").forward(req, resp);

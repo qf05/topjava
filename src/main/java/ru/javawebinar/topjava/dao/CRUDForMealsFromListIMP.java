@@ -33,8 +33,9 @@ public class CRUDForMealsFromListIMP implements CRUDForMeals {
 
     @Override
     public Meal add(Meal meal) {
-        mealMap.put(meal.getId(),meal);
-        return meal;
+        Meal newMeal = new Meal(meal.getDateTime(),meal.getDescription(),meal.getCalories(),id.incrementAndGet());
+        mealMap.put(newMeal.getId(),newMeal);
+        return newMeal;
     }
 
     @Override
