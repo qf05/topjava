@@ -4,7 +4,7 @@ import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CRUDForMeals {
+public interface CrudForMeals {
     void update(Meal meal);
     Meal add(Meal meal);
     void delete(int id);

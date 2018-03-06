@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.CRUDForMeals;
-import ru.javawebinar.topjava.dao.CRUDForMealsFromListIMP;
+import ru.javawebinar.topjava.dao.CrudForMeals;
+import ru.javawebinar.topjava.dao.CrudForMealsFromMapImp;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -21,10 +21,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
-    private CRUDForMeals dataBase = new CRUDForMealsFromListIMP();
-
     private static final String INSERT_OR_EDIT = "/mealEdit.jsp";
     private static final String LIST_MEALS = "/meals.jsp";
+
+    private CrudForMeals dataBase;
+
+    public MealServlet() {
+        super();
+        dataBase = new CrudForMealsFromMapImp();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,21 +37,25 @@ public class MealServlet extends HttpServlet {
         String forward = "";
         String action = request.getParameter("action");
 
-        if (action.equalsIgnoreCase("delete")) {
-            int userId = Integer.parseInt(request.getParameter("Id"));
-            dataBase.delete(userId);
-            forward = LIST_MEALS;
-            request.setAttribute("listMeals", getAllMeals());
-        } else if (action.equalsIgnoreCase("edit")) {
-            forward = INSERT_OR_EDIT;
-            int userId = Integer.parseInt(request.getParameter("Id"));
-            Meal meal = dataBase.getId(userId);
-            request.setAttribute("meal", meal);
-        } else if (action.equalsIgnoreCase("listMeals")) {
+        if (action == null || action.equalsIgnoreCase("listMeals")) {
             forward = LIST_MEALS;
             request.setAttribute("listMeals", getAllMeals());
         } else {
-            forward = INSERT_OR_EDIT;
+            if (action.equalsIgnoreCase("delete")) {
+                int userId = Integer.parseInt(request.getParameter("Id"));
+                dataBase.delete(userId);
+                forward = LIST_MEALS;
+                request.setAttribute("listMeals", getAllMeals());
+            } else {
+                if (action.equalsIgnoreCase("edit")) {
+                    forward = INSERT_OR_EDIT;
+                    int userId = Integer.parseInt(request.getParameter("Id"));
+                    Meal meal = dataBase.getId(userId);
+                    request.setAttribute("meal", meal);
+                } else {
+                    forward = INSERT_OR_EDIT;
+                }
+            }
         }
         request.getRequestDispatcher(forward).forward(request, response);
     }

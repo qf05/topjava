@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CRUDForMealsFromListIMP implements CRUDForMeals {
+public class CrudForMealsFromMapImp implements CrudForMeals {
 
     public static AtomicInteger id = new AtomicInteger(0);
 
