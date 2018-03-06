@@ -13,8 +13,15 @@ public class TimeUtil {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) <= 0;
     }
 
+    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm");
+
+    public static String dateFormatter(LocalDateTime dateTime) {
+        return dateTime.format(format);
+    }
+
+    private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
     public static LocalDateTime timeFormatter(String date) {
-        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         return LocalDateTime.parse(date, dateTimeFormat);
     }
 }
