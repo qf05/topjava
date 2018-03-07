@@ -26,32 +26,29 @@ public class MealServlet extends HttpServlet {
 
     private CrudForMeals dataBase;
 
-    public MealServlet() {
-        super();
+    @Override
+    public void init() throws ServletException {
+        super.init();
         dataBase = new CrudForMealsFromMapImp();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to meals");
-        String forward = "";
+        String forward = LIST_MEALS;
         String action = request.getParameter("action");
 
         if (action == null || action.equalsIgnoreCase("listMeals")) {
-            forward = LIST_MEALS;
             request.setAttribute("listMeals", getAllMeals());
         } else {
             if (action.equalsIgnoreCase("delete")) {
-                int userId = Integer.parseInt(request.getParameter("Id"));
-                dataBase.delete(userId);
-                forward = LIST_MEALS;
-                request.setAttribute("listMeals", getAllMeals());
+                dataBase.delete(Integer.parseInt(request.getParameter("Id")));
+                response.sendRedirect("/meals");
+                return;
             } else {
                 if (action.equalsIgnoreCase("edit")) {
                     forward = INSERT_OR_EDIT;
-                    int userId = Integer.parseInt(request.getParameter("Id"));
-                    Meal meal = dataBase.getId(userId);
-                    request.setAttribute("meal", meal);
+                    request.setAttribute("meal", dataBase.getId(Integer.parseInt(request.getParameter("Id"))));
                 } else {
                     forward = INSERT_OR_EDIT;
                 }
@@ -63,15 +60,14 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
+        LocalDateTime date = TimeUtil.timeFormatter(req.getParameter("addDate"));
+        Meal meal = new Meal(0, date, req.getParameter("addDis"), Integer.parseInt(req.getParameter("addCalories")));
 
         if (req.getParameter("id").isEmpty()) {
-            LocalDateTime date = TimeUtil.timeFormatter(req.getParameter("addDate"));
-            dataBase.add(new Meal(0, date, req.getParameter("addDis"),
-                    Integer.parseInt(req.getParameter("addCalories"))));
+            dataBase.add(meal);
         } else {
-            LocalDateTime date = TimeUtil.timeFormatter(req.getParameter("addDate"));
-            dataBase.update(new Meal(Integer.parseInt(req.getParameter("id")), date,
-                    req.getParameter("addDis"), Integer.parseInt(req.getParameter("addCalories"))));
+            meal.setId(Integer.parseInt(req.getParameter("id")));
+            dataBase.update(meal);
         }
         req.setAttribute("listMeals", getAllMeals());
         req.getRequestDispatcher(LIST_MEALS).forward(req, resp);
