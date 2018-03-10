@@ -4,11 +4,44 @@
     <title>Java Enterprise (Topjava)</title>
 </head>
 <body>
+<table style="background-color: gray">
+    <tr>
+        <form id="login" action="users" method="post">
+            <td width="5%"></td>
+            <td style="color: aliceblue">Подсчет колорий</td>
+            <td width="50%"><input type="hidden" name="login" value="login"></td>
+            <td><input type="text" placeholder="Email" name="username"></td>
+            <td><input type="password" placeholder="Password" name="password"></td>
+            <td>
+                <button type="submit">Login</button>
+            </td>
+            <td width="5%"></td>
+        </form>
+    </tr>
+</table>
+
+
 <h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
 <hr>
-<ul>
-    <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
-</ul>
+
+<br>
+<form id="login1" action="users" method="post">
+    <input type="hidden" name="login" value="login">
+    <input type="hidden" name="username" value="sasha@gmail.com">
+    <input type="hidden" name="password" value="password">
+    <button type="submit"> Войти как User 1</button>
+</form>
+<br>
+<form id="login2" action="users" method="post">
+    <input type="hidden" name="login" value="login">
+    <input type="hidden" name="username" value="masha@gmail.com">
+    <input type="hidden" name="password" value="password">
+    <button type="submit"> Войти как User 2</button>
+</form>
+<br>
+<!--<ul>-->
+    <!--<li><a href="users">Users</a></li>-->
+    <!--<li><a href="meals">Meals</a></li>-->
+<!--</ul>-->
 </body>
 </html>
