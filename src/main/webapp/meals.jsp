@@ -21,19 +21,18 @@
 <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.model.User"/>
 
 <table style="background-color: gray">
-    <tr>
-        <td width="5%"></td>
-        <td style="color: aliceblue">Подсчет колорий</td>
-        <td width="70%"></td>
-        <td style="color: aliceblue">${user.name}</td>
-        <td>
-            <form id="logout" action="users" method="post">
-                <input type="hidden" value="login" name="login">
+    <form id="logout" action="users" method="post">
+        <tr>
+            <td width="5%"></td>
+            <td style="color: aliceblue">Подсчет колорий</td>
+            <td width="70%"></td>
+            <td style="color: aliceblue">${user.name}</td>
+            <td>
                 <button type="submit" style="margin-left: 20px">Выход</button>
-            </form>
-        </td>
-        <td width="5%"></td>
-    </tr>
+            </td>
+            <td width="5%"></td>
+        </tr>
+    </form>
 </table>
 
 <section>
@@ -44,26 +43,29 @@
         <form method="post" action="meals">
             <input type="hidden" name="filter" value="filter">
             <tr>
-                <td>От даты: </td>
+                <td>От даты:</td>
                 <td><input type="date" name="filterFromDate" value="${filterFromDate}"></td>
-                <td>От времени: </td>
+                <td>От времени:</td>
                 <td><input type="time" name="filterFromTime" value="${filterFromTime}"></td>
             </tr>
             <tr>
-                <td>До даты: </td>
+                <td>До даты:</td>
                 <td><input type="date" name="filterToDate" value="${filterToDate}"></td>
-                <td>До времени: </td>
+                <td>До времени:</td>
                 <td><input type="time" name="filterToTime" value="${filterToTime}"></td>
             </tr>
             <tr>
                 <td></td>
                 <td></td>
-                <td><button type="reset">Clean</button></td>
-                <td><button type="submit">Filter</button></td>
+                <td>
+                    <button type="reset">Clean</button>
+                </td>
+                <td>
+                    <button type="submit">Filter</button>
+                </td>
             </tr>
         </form>
     </table>
-
 
 
     <a href="meals?action=create">Add Meal</a>

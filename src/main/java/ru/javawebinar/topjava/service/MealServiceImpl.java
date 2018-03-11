@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
@@ -22,9 +23,14 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Meal save(Meal meal) throws NotFoundException {
+    public Meal update(Meal meal){
         checkNotFoundWithId(repository.save(meal), meal.getId());
         return meal;
+    }
+
+    @Override
+    public Meal create(Meal meal) throws NotFoundException {
+        return repository.save(meal);
     }
 
     @Override
@@ -40,5 +46,10 @@ public class MealServiceImpl implements MealService {
     @Override
     public Collection<Meal> getAll(int userId) {
         return repository.getAll(userId);
+    }
+
+    @Override
+    public Collection<Meal> getAllFiltred(int userId, LocalDate localDateFrom, LocalDate localDateTo) {
+        return repository.getAllFiltred(userId, localDateFrom, localDateTo);
     }
 }
