@@ -17,8 +17,8 @@
     </style>
 </head>
 <body>
-<c:set var="user" value="${user}"/>
-<jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.model.User"/>
+<%--<c:set var="user" value="${user}"/>--%>
+<%--<jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.model.User"/>--%>
 
 <table style="background-color: gray">
     <form id="logout" action="users" method="post">
@@ -26,7 +26,7 @@
             <td width="5%"></td>
             <td style="color: aliceblue">Подсчет колорий</td>
             <td width="70%"></td>
-            <td style="color: aliceblue">${user.name}</td>
+            <%--<td style="color: aliceblue">${user.name}</td>--%>
             <td>
                 <button type="submit" style="margin-left: 20px">Выход</button>
             </td>
@@ -91,8 +91,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals?action=update&id=${meal.id}&userId=${user.id}">Update</a></td>
-                <td><a href="meals?action=delete&id=${meal.id}&userId=${user.id}">Delete</a></td>
+                <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
+                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
             </tr>
         </c:forEach>
     </table>

@@ -8,9 +8,9 @@ import java.util.Collection;
 
 public interface MealService {
 
-    Meal update(Meal meal) throws NotFoundException;
+    Meal update(Meal meal, int userId) throws NotFoundException;
 
-    Meal create(Meal meal);
+    Meal create(Meal meal, int userId);
 
     void delete(int id, int userId) throws NotFoundException;
 

@@ -10,40 +10,26 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Controller
 public class MealRestController {
     @Autowired
     private MealService service;
 
-    public Meal save(String idStr, String dateTime, String description, String calories) {
-        int id = idStr.isEmpty() ? 0 : Integer.valueOf(idStr);
-        Meal meal = new Meal(id == 0 ? null : id, AuthorizedUser.id(),
-                LocalDateTime.parse(dateTime), description, Integer.parseInt(calories));
-        if (meal.isNew()) {
-            meal.setUserId(AuthorizedUser.id());
-            return this.create(meal);
-        } else {
-            return this.update(meal, id);
-        }
-    }
-
     public Meal update(Meal meal, int id) throws NotFoundException {
-        if (meal.getUserId()!= AuthorizedUser.id()){
-            throw new NotFoundException("id " + id);
-        }
         assureIdConsistent(meal, id);
-        return service.update(meal);
+        return checkNotFoundWithId(service.update(meal, AuthorizedUser.id()), id);
     }
 
     public Meal create(Meal meal) throws NotFoundException {
-        return service.create(meal);
+        checkNew(meal);
+        return service.create(meal, AuthorizedUser.id());
     }
 
     public void delete(int id) throws NotFoundException {
