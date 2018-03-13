@@ -24,7 +24,7 @@ public class MealRestController {
 
     public Meal update(Meal meal, int id) throws NotFoundException {
         assureIdConsistent(meal, id);
-        return checkNotFoundWithId(service.update(meal, AuthorizedUser.id()), id);
+        return service.update(meal, AuthorizedUser.id());
     }
 
     public Meal create(Meal meal) throws NotFoundException {
