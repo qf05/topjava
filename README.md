@@ -2,6 +2,8 @@
 
 [![Dependency Status](https://www.versioneye.com/user/projects/5ab4d23d0fb24f44857942b2/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/5ab4d23d0fb24f44857942b2)
 
+[![Build Status](https://travis-ci.org/qf05/topjava.svg?branch=master)](https://travis-ci.org/qf05/topjava)
+
 Java Enterprise Online Project 
 ===============================
 
