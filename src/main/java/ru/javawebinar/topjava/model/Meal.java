@@ -1,16 +1,17 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
 @NamedQueries({
         @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
-        @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+        @NamedQuery(name = Meal.UPDATE, query = "UPDATE Meal m SET m.description=:description, m.calories=:calories, m.dateTime=:date_time WHERE m.id=:id AND m.user.id=:userId"),
         @NamedQuery(name = Meal.FILTER_SORTED, query = "SELECT m FROM Meal m " +
                 "WHERE m.user.id=:userId AND m.dateTime >= :startDate AND m.dateTime<= :endDate ORDER BY m.dateTime DESC"),
         @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
@@ -21,7 +22,7 @@ import java.util.Date;
 public class Meal extends AbstractBaseEntity {
 
     public static final String DELETE = "Meal.delete";
-    public static final String GET = "Meal.get";
+    public static final String UPDATE = "Meal.update";
     public static final String FILTER_SORTED = "Meal.getBetween";
     public static final String ALL_SORTED = "Meal.getAllSorted";
 
@@ -29,12 +30,12 @@ public class Meal extends AbstractBaseEntity {
     @NotNull
     private LocalDateTime dateTime;
 
-    @Column(name = "description", nullable = false, unique = true)
+    @Column(name = "description", nullable = false)
     @NotBlank
     private String description;
 
-    @Column(name = "calories", nullable = false, unique = true)
-    @NotNull
+    @Column(name = "calories")
+    @Range(min = 10, max = 10000)
     private int calories;
 
     @JoinColumn(name = "user_id")
