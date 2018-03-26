@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,29 +42,23 @@ public class MealServiceTest {
     }
 
     private static final Logger logger = Logger.getLogger("ru.javawebinar.topjava");
-    private long startTime;
+    //private long startTime;
     private static Map<String, Long> testTime = new HashMap<>();
 
     @AfterClass
-    public static void svodka() {
+    public static void report() {
         for (Map.Entry k : testTime.entrySet()) {
             logger.log(Level.INFO, "Test: " + k.getKey() + " time: " + k.getValue());
         }
     }
 
     @Rule
-    public TestWatcher watcher = new TestWatcher() {
+    public Stopwatch stopwatch = new Stopwatch() {
 
         @Override
-        protected void starting(Description description) {
-            startTime = System.currentTimeMillis();
-        }
-
-        @Override
-        protected void finished(Description description) {
-            long res = System.currentTimeMillis() - startTime;
-            testTime.put(description.getMethodName(), res);
-            logger.info("Test time: " + res);
+        protected void finished(long nanos, Description description) {
+            testTime.put(description.getMethodName(), TimeUnit.NANOSECONDS.toMicros(nanos));
+            logger.info( "finished"+ TimeUnit.NANOSECONDS.toMicros(nanos));
         }
     };
 
