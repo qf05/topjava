@@ -57,8 +57,8 @@ public class MealServiceTest {
 
         @Override
         protected void finished(long nanos, Description description) {
-            testTime.put(description.getMethodName(), TimeUnit.NANOSECONDS.toMicros(nanos));
-            logger.info( "finished"+ TimeUnit.NANOSECONDS.toMicros(nanos));
+            testTime.put(description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            logger.info( "finished"+ TimeUnit.NANOSECONDS.toMillis(nanos));
         }
     };
 
@@ -102,7 +102,6 @@ public class MealServiceTest {
     @Test
     public void update() throws Exception {
         Meal updated = getUpdated();
-        // updated.setUser(USER);
         service.update(updated, USER_ID);
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
