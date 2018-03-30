@@ -3,9 +3,12 @@ package ru.javawebinar.topjava.repository.datajpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -26,8 +29,14 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User get(int id) {
-        return crudRepository.findById(id).orElse(null);
+        User user = crudRepository.findById(id).orElse(null);
+        if (user != null && user.getMeals() != null) {
+            List<Meal> nm = new ArrayList<>(user.getMeals());
+            user.setMeals(nm);
+        }
+        return user;
     }
 
     @Override
