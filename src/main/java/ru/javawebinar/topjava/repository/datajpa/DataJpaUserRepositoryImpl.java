@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,6 +18,7 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     private CrudUserRepository crudRepository;
 
     @Override
+    @Transactional
     public User save(User user) {
         return crudRepository.save(user);
     }
@@ -29,14 +29,8 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public User get(int id) {
-        User user = crudRepository.findById(id).orElse(null);
-        if (user != null && user.getMeals() != null) {
-            List<Meal> nm = new ArrayList<>(user.getMeals());
-            user.setMeals(nm);
-        }
-        return user;
+        return crudRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -47,5 +41,10 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         return crudRepository.findAll(SORT_NAME_EMAIL);
+    }
+
+    @Override
+    public User getUserAndMeals(int id) throws NotFoundException {
+        return crudRepository.get(id);
     }
 }

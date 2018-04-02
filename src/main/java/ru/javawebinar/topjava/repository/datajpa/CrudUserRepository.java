@@ -30,4 +30,7 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     List<User> findAll(Sort sort);
 
     User getByEmail(String email);
+
+    @Query("SELECT u FROM User u inner join fetch u.meals m WHERE u.id=:id ORDER BY m.dateTime DESC")
+    User get(@Param("id") int id);
 }

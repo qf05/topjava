@@ -19,10 +19,6 @@ public class UserTestData {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "roles", "meals");
     }
 
-    public static void assertMatchWidthMeals(User actual, User expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "roles");
-    }
-
     public static void assertMatch(Iterable<User> actual, User... expected) {
         assertMatch(actual, Arrays.asList(expected));
     }

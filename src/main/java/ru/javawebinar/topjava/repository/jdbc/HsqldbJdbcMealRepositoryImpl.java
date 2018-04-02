@@ -26,20 +26,16 @@ public class HsqldbJdbcMealRepositoryImpl extends JdbcMealRepositoryImpl {
 
     @Override
     public Meal save(Meal meal, int userId) {
+        String s = DateTimeUtil.toString(meal.getDateTime()) + ":00";
         MapSqlParameterSource map = new MapSqlParameterSource()
-                .addValue("id", meal.getId())
-                .addValue("description", meal.getDescription())
-                .addValue("calories", meal.getCalories())
-                .addValue("date_time", DateTimeUtil.toString(meal.getDateTime()))
-                .addValue("user_id", userId);
-
-        return super.saveImpl(meal, map);
+                .addValue("date_time", s);
+        return super.saveImpl(meal, userId, map);
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        String begin = DateTimeUtil.toString(startDate);
-        String end = DateTimeUtil.toString(endDate);
+        String begin = DateTimeUtil.toString(startDate) + ":00";
+        String end = DateTimeUtil.toString(endDate) + ":00";
         return super.jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC",
                 ROW_MAPPER, userId, begin, end);

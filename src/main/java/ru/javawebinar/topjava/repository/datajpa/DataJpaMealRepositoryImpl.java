@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -22,6 +21,7 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     private CrudUserRepository userRepository;
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
         if (!meal.isNew()) {
             Meal m = get(meal.getId(), userId);
@@ -40,12 +40,9 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Meal get(int id, int userId) {
         Meal meal = crudRepository.findById(id).orElse(null);
         if (meal != null && meal.getUser().getId() == userId) {
-            User user = new User(meal.getUser());
-            meal.setUser(user);
             return meal;
         }
         return null;
@@ -59,5 +56,14 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return crudRepository.findByDateTimeBetweenAndUser_Id(startDate, endDate, userId, SORT);
+    }
+
+    @Override
+    public Meal getMealAndUser(int id, int userId) {
+        Meal meal = crudRepository.get(id);
+        if (meal != null && meal.getUser().getId() == userId) {
+            return meal;
+        }
+        return null;
     }
 }
