@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
@@ -41,6 +42,11 @@ public abstract class ServiceTest {
         }
     };
 
+    @BeforeClass
+    public static void newResult() {
+        results = new StringBuilder();
+    }
+
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
@@ -48,7 +54,6 @@ public abstract class ServiceTest {
                 "\n---------------------------------" +
                 results +
                 "\n---------------------------------");
-        results = new StringBuilder();
     }
 
     static {

@@ -18,7 +18,6 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     private CrudUserRepository crudRepository;
 
     @Override
-    @Transactional
     public User save(User user) {
         return crudRepository.save(user);
     }
@@ -45,6 +44,6 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
 
     @Override
     public User getUserAndMeals(int id) throws NotFoundException {
-        return crudRepository.get(id);
+        return crudRepository.getUserWidthMeal(id);
     }
 }

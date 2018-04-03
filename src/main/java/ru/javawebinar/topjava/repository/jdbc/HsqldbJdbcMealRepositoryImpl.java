@@ -10,6 +10,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,20 +26,7 @@ public class HsqldbJdbcMealRepositoryImpl extends JdbcMealRepositoryImpl {
     }
 
     @Override
-    public Meal save(Meal meal, int userId) {
-        String s = DateTimeUtil.toString(meal.getDateTime()) + ":00";
-        MapSqlParameterSource map = new MapSqlParameterSource()
-                .addValue("date_time", s);
-        return super.saveImpl(meal, userId, map);
+    public String getSuitableDateTime(LocalDateTime t) {
+        return Timestamp.valueOf(t).toString();
     }
-
-    @Override
-    public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        String begin = DateTimeUtil.toString(startDate) + ":00";
-        String end = DateTimeUtil.toString(endDate) + ":00";
-        return super.jdbcTemplate.query(
-                "SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, begin, end);
-    }
-
 }

@@ -39,15 +39,11 @@ public abstract class JdbcMealRepositoryImpl implements MealRepository {
     @Override
     public Meal save(Meal meal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
-                .addValue("date_time", meal.getDateTime());
-        return saveImpl(meal, userId, map);
-    }
-
-    Meal saveImpl(Meal meal, int userId, MapSqlParameterSource map) {
-        map.addValue("id", meal.getId())
+                .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("user_id", userId);
+                .addValue("user_id", userId)
+                .addValue("date_time",getSuitableDateTime(meal.getDateTime()));
 
         if (meal.isNew()) {
             Number newId = insertMeal.executeAndReturnKey(map);
@@ -62,6 +58,10 @@ public abstract class JdbcMealRepositoryImpl implements MealRepository {
             }
         }
         return meal;
+    }
+
+    <T> T getSuitableDateTime(LocalDateTime t){
+        return (T) t;
     }
 
     @Override
@@ -86,6 +86,6 @@ public abstract class JdbcMealRepositoryImpl implements MealRepository {
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, startDate, endDate);
+                ROW_MAPPER, userId, getSuitableDateTime(startDate), getSuitableDateTime(endDate));
     }
 }
