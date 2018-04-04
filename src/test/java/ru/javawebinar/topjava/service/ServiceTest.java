@@ -44,7 +44,7 @@ public abstract class ServiceTest {
 
     @BeforeClass
     public static void newResult() {
-        results = new StringBuilder();
+        results.setLength(0);
     }
 
     @AfterClass

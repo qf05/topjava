@@ -18,23 +18,16 @@ import java.util.List;
 
 public abstract class JdbcMealRepositoryImpl implements MealRepository {
 
-    static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
-
-    final JdbcTemplate jdbcTemplate;
-
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    private final SimpleJdbcInsert insertMeal;
+    private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
     @Autowired
-    public JdbcMealRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.insertMeal = new SimpleJdbcInsert(dataSource)
-                .withTableName("meals")
-                .usingGeneratedKeyColumns("id");
+    private JdbcTemplate jdbcTemplate;
 
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public Meal save(Meal meal, int userId) {
@@ -43,10 +36,12 @@ public abstract class JdbcMealRepositoryImpl implements MealRepository {
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
                 .addValue("user_id", userId)
-                .addValue("date_time",getSuitableDateTime(meal.getDateTime()));
+                .addValue("date_time", getSuitableDateTime(meal.getDateTime()));
 
         if (meal.isNew()) {
-            Number newId = insertMeal.executeAndReturnKey(map);
+            Number newId = new SimpleJdbcInsert(dataSource)
+                    .withTableName("meals")
+                    .usingGeneratedKeyColumns("id").executeAndReturnKey(map);
             meal.setId(newId.intValue());
         } else {
             if (namedParameterJdbcTemplate.update("" +
@@ -60,7 +55,7 @@ public abstract class JdbcMealRepositoryImpl implements MealRepository {
         return meal;
     }
 
-    <T> T getSuitableDateTime(LocalDateTime t){
+    <T> T getSuitableDateTime(LocalDateTime t) {
         return (T) t;
     }
 

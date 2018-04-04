@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @Repository
 public class DataJpaMealRepositoryImpl implements MealRepository {
-    private static final Sort SORT = new Sort(Sort.Direction.DESC, "dateTime");
 
     @Autowired
     private CrudMealRepository crudRepository;
@@ -23,12 +21,8 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        if (!meal.isNew()) {
-            Meal m = get(meal.getId(), userId);
-            if (m != null) {
-                meal.setUser(m.getUser());
-                return crudRepository.save(meal);
-            } else return null;
+        if (!meal.isNew() && get(meal.getId(), userId) == null) {
+            return null;
         }
         meal.setUser(userRepository.getOne(userId));
         return crudRepository.save(meal);
@@ -42,20 +36,17 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         Meal meal = crudRepository.findById(id).orElse(null);
-        if (meal != null && meal.getUser().getId() == userId) {
-            return meal;
-        }
-        return null;
+        return meal != null && meal.getUser().getId() == userId ? meal : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return crudRepository.findByUser_Id(userId, SORT);
+        return crudRepository.findByUser_IdOrderByDateTimeDesc(userId);
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return crudRepository.findByDateTimeBetweenAndUser_Id(startDate, endDate, userId, SORT);
+        return crudRepository.findByDateTimeBetweenAndUser_IdOrderByDateTimeDesc(startDate, endDate, userId);
     }
 
     @Override
