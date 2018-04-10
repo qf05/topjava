@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealServiceTest;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
@@ -18,5 +19,11 @@ public class DataJpaMealServiceTest extends MealServiceTest {
         Meal actual = service.getMealAndUser(ADMIN_MEAL_ID, ADMIN_ID);
         ADMIN_MEAL1.setUser(ADMIN);
         assertMatchWidthUser(actual, ADMIN_MEAL1);
+    }
+
+    @Test
+    public void getNotFoundMealWidthUser() throws Exception {
+        thrown.expect(NotFoundException.class);
+        service.getMealAndUser(MEAL1_ID, ADMIN_ID);
     }
 }
