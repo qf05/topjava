@@ -22,13 +22,8 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 @Controller
 public class MealRestController {
     private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
-
-    private final MealService service;
-
     @Autowired
-    public MealRestController(MealService service) {
-        this.service = service;
-    }
+    MealService service;
 
     public Meal get(int id) {
         int userId = AuthorizedUser.id();
