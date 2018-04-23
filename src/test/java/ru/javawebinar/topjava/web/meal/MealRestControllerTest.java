@@ -11,7 +11,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -20,6 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
 public class MealRestControllerTest extends AbstractControllerTest {
 
@@ -27,8 +28,6 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Autowired
     private MealService mealService;
-
-    private int userId = 100000;
 
     @Test
     public void testGet() throws Exception {
@@ -44,7 +43,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL + MEAL1.getId()))
                 .andExpect(status().isNoContent())
                 .andDo(print());
-        assertMatch(mealService.getAll(userId), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
+        assertMatch(mealService.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
     @Test
@@ -53,7 +52,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MealsUtil.getWithExceeded(MEALS, 2000)));
+                .andExpect(contentJson(MealsUtil.getWithExceeded(MEALS, DEFAULT_CALORIES_PER_DAY)));
     }
 
     @Test
@@ -67,7 +66,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
         meal.setId(returned.getId());
 
         assertMatch(returned, meal);
-        assertMatch(mealService.getAll(userId), meal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
+        assertMatch(mealService.getAll(USER_ID), meal, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
     }
 
     @Test
@@ -79,7 +78,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isOk());
-        assertMatch(mealService.get(MEAL1_ID, userId), updated);
+        assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
     @Test
@@ -88,6 +87,24 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MealsUtil.getWithExceeded(Arrays.asList(MEAL2, MEAL1), 2000)));
+                .andExpect(contentJson(MealsUtil.getWithExceeded(Arrays.asList(MEAL2, MEAL1), DEFAULT_CALORIES_PER_DAY)));
+    }
+
+    @Test
+    public void getBetween2() throws Exception {
+        mockMvc.perform(get(REST_URL + "filter2?startDate=2015-05-30&startTime=01:15&endDate=2015-05-30&endTime=16:15"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJson(MealsUtil.getWithExceeded(Arrays.asList(MEAL2, MEAL1), DEFAULT_CALORIES_PER_DAY)));
+    }
+
+    @Test
+    public void getBetween2Null() throws Exception {
+        mockMvc.perform(get(REST_URL + "filter2?startDate=&startTime="))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJson(MealsUtil.getWithExceeded(MEALS, DEFAULT_CALORIES_PER_DAY)));
     }
 }
