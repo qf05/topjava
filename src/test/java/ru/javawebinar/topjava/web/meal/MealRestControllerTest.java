@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -57,7 +58,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void created() throws Exception {
-        Meal meal = new Meal(LocalDateTime.of(2018, 4, 20, 11, 0), "Шашлычок", 300);
+        Meal meal = MealTestData.getCreated();
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(meal)))
@@ -71,7 +72,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     public void update() throws Exception {
-        Meal updated = new Meal(MEAL1.getId(), MEAL1.getDateTime(), MEAL1.getDescription(), MEAL1.getCalories());
+        Meal updated = MealTestData.getUpdated();
         updated.setDescription("Шашлычок");
         updated.setCalories(200);
         mockMvc.perform(put(REST_URL + MEAL1.getId())
