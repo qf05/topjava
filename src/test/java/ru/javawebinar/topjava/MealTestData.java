@@ -45,16 +45,8 @@ public class MealTestData {
         assertMatch(actual, Arrays.asList(expected));
     }
 
-    public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
+    public static <T> void assertMatch(Iterable<T> actual, Iterable<T> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("user").isEqualTo(expected);
-    }
-
-    public static void assertMatch1(Iterable<MealWithExceed> actual, Iterable<MealWithExceed> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("user").isEqualTo(expected);
-    }
-
-    public static ResultMatcher contentJson(Meal... expected) {
-        return content().json(writeValue(Arrays.asList(expected)));
     }
 
     public static ResultMatcher contentJson(Iterable<MealWithExceed> expected) {

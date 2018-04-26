@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Test;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -39,29 +40,6 @@ public class RootControllerTest extends AbstractControllerTest {
 
     @Test
     public void testMeals() throws Exception {
-
-        Matcher<Iterable<MealWithExceed>> matcher = new Matcher<Iterable<MealWithExceed>>() {
-            @Override
-            public boolean matches(Object o) {
-                MealTestData.assertMatch1((Iterable<MealWithExceed>) o, MealsUtil.getWithExceeded(MEALS, DEFAULT_CALORIES_PER_DAY));
-                return true;
-            }
-
-            @Override
-            public void describeMismatch(Object o, Description description) {
-
-            }
-
-            @Override
-            public void _dont_implement_Matcher___instead_extend_BaseMatcher_() {
-
-            }
-
-            @Override
-            public void describeTo(Description description) {
-            }
-        };
-
         mockMvc.perform(get("/meals"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -76,6 +54,6 @@ public class RootControllerTest extends AbstractControllerTest {
                                 hasProperty("calories", is(500))
                         )
                 )))
-                .andExpect(model().attribute("meals", matcher));
+                .andExpect(model().attribute("meals", MealsUtil.getWithExceeded(MealTestData.MEALS, AuthorizedUser.getCaloriesPerDay())));
     }
 }
