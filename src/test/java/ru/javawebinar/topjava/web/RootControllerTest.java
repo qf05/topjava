@@ -54,6 +54,7 @@ public class RootControllerTest extends AbstractControllerTest {
                                 hasProperty("calories", is(500))
                         )
                 )))
+
                 .andExpect(model().attribute("meals", MealsUtil.getWithExceeded(MealTestData.MEALS, AuthorizedUser.getCaloriesPerDay())));
     }
 }
