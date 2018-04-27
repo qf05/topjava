@@ -1,26 +1,20 @@
-var ajaxUrl = "ajax/admin/users/";
+var ajaxUrl = "ajax/meals/";
 var datatableApi;
 
 // $(document).ready(function () {
 $(function () {
-    datatableApi = $("#datatable").DataTable({
+    datatableApi = $("#mealdatatable").DataTable({
         "paging": false,
         "info": true,
         "columns": [
             {
-                "data": "name"
+                "data": "dateTime"
             },
             {
-                "data": "email"
+                "data": "description"
             },
             {
-                "data": "roles"
-            },
-            {
-                "data": "enabled"
-            },
-            {
-                "data": "registered"
+                "data": "calories"
             },
             {
                 "defaultContent": "Edit",
@@ -41,15 +35,24 @@ $(function () {
     makeEditable();
 });
 
-function check(id, enabled) {
-    var param = enabled?"enabled":"disabled";
+function filter() {
+    f = false;
+    var form = $("#filter")
     $.ajax({
-        type: "POST",
-        url: ajaxUrl+id,
-        data: "enabled="+ param,
-        success: function () {
-            updateTable();
-            successNoty("Change enabled for user id = " + id);
+        type: "GET",
+        url: ajaxUrl + "filter",
+        data: form.serialize(),
+        success: function (data) {
+            datatableApi.clear().rows.add(data).draw();
         }
+
     });
+}
+    function cleanfilter(){
+        $(filter).find(":input").val("");
+    // startTime.clear;
+    // startTime = "";
+
+    f = true;
+    updateTable();
 }

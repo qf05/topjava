@@ -26,11 +26,15 @@ function deleteRow(id) {
         }
     });
 }
-
+var f = true;
 function updateTable() {
-    $.get(ajaxUrl, function (data) {
-        datatableApi.clear().rows.add(data).draw();
-    });
+    if (f) {
+        $.get(ajaxUrl, function (data) {
+            datatableApi.clear().rows.add(data).draw();
+        });
+    }else {
+        filter();
+    }
 }
 
 function save() {
