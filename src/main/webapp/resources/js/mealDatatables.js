@@ -27,8 +27,8 @@ $(function () {
         ],
         "order": [
             [
-                0,
-                "asc"
+                "asc",
+                0
             ]
         ]
     });
@@ -48,11 +48,9 @@ function filter() {
 
     });
 }
-    function cleanfilter(){
-        $(filter).find(":input").val("");
-    // startTime.clear;
-    // startTime = "";
 
+function cleanfilter() {
+    $(filter).find(":input").val("");
     f = true;
     updateTable();
 }

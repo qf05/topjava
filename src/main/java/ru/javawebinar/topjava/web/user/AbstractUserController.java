@@ -48,4 +48,9 @@ public abstract class AbstractUserController {
         log.info("getByEmail {}", email);
         return service.getByEmail(email);
     }
+
+    public User changeEnabled(int id, boolean enabled) {
+        log.info("changeEnabled user with id={} , to {}", id, enabled);
+        return service.changeEnabled(id,enabled);
+    }
 }

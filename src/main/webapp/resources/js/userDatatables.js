@@ -42,14 +42,18 @@ $(function () {
 });
 
 function check(id, enabled) {
-    var param = enabled?"enabled":"disabled";
+    var d = 'tr[id=\'' + id + '\']';
+    var s = enabled?"enabled":"disabled";
     $.ajax({
         type: "POST",
         url: ajaxUrl+id,
-        data: "enabled="+ param,
+        data: "enabled="+ enabled,
         success: function () {
-            updateTable();
-            successNoty("Change enabled for user id = " + id);
+            $(d).attr("data-mealExceed", !enabled);
+            successNoty("User width id = " + id + " is " + s);
+        },
+        error: function () {
+            $(d).find(":input").prop("checked", !enabled);
         }
     });
 }
