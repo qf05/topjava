@@ -1,4 +1,5 @@
 var ajaxUrl = "ajax/admin/users/";
+var updateUrl = ajaxUrl;
 var datatableApi;
 
 // $(document).ready(function () {

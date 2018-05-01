@@ -26,15 +26,12 @@ function deleteRow(id) {
         }
     });
 }
-var f = true;
+
+var mealsFilter = "";
 function updateTable() {
-    if (f) {
-        $.get(ajaxUrl, function (data) {
+        $.get(updateUrl, mealsFilter, function (data) {
             datatableApi.clear().rows.add(data).draw();
         });
-    }else {
-        filter();
-    }
 }
 
 function save() {

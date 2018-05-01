@@ -1,4 +1,5 @@
 var ajaxUrl = "ajax/meals/";
+var updateUrl = "ajax/meals/";
 var datatableApi;
 
 // $(document).ready(function () {
@@ -27,8 +28,8 @@ $(function () {
         ],
         "order": [
             [
-                "asc",
-                0
+                0,
+                "desc"
             ]
         ]
     });
@@ -36,21 +37,14 @@ $(function () {
 });
 
 function filter() {
-    f = false;
-    var form = $("#filter")
-    $.ajax({
-        type: "GET",
-        url: ajaxUrl + "filter",
-        data: form.serialize(),
-        success: function (data) {
-            datatableApi.clear().rows.add(data).draw();
-        }
-
-    });
+    updateUrl = "ajax/meals/filter/";
+    mealsFilter = $("#filter").serialize();
+    updateTable();
 }
 
 function cleanfilter() {
     $(filter).find(":input").val("");
-    f = true;
+    mealsFilter = "";
+    updateUrl = "ajax/meals/";
     updateTable();
 }
