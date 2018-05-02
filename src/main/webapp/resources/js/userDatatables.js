@@ -1,5 +1,4 @@
 var ajaxUrl = "ajax/admin/users/";
-var updateUrl = ajaxUrl;
 var datatableApi;
 
 // $(document).ready(function () {
@@ -57,4 +56,8 @@ function check(id, enabled) {
             $(d).find(":input").prop("checked", !enabled);
         }
     });
+}
+
+function updateTable() {
+    updates(ajaxUrl);
 }

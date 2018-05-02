@@ -1,7 +1,7 @@
 function makeEditable() {
-    $(".delete").click(function () {
-        deleteRow($(this).attr("id"));
-    });
+    // $(".delete").click(function () {
+    //     deleteRow($(this).attr("id"));
+    // });
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -27,11 +27,10 @@ function deleteRow(id) {
     });
 }
 
-var mealsFilter = "";
-function updateTable() {
-        $.get(updateUrl, mealsFilter, function (data) {
-            datatableApi.clear().rows.add(data).draw();
-        });
+function updates(url) {
+    $.get(url, function (data){
+        datatableApi.clear().rows.add(data).draw()
+    });
 }
 
 function save() {

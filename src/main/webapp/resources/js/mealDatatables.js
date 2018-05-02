@@ -1,5 +1,5 @@
 var ajaxUrl = "ajax/meals/";
-var updateUrl = "ajax/meals/";
+var updateUrl = ajaxUrl;
 var datatableApi;
 
 // $(document).ready(function () {
@@ -37,14 +37,20 @@ $(function () {
 });
 
 function filter() {
-    updateUrl = "ajax/meals/filter/";
-    mealsFilter = $("#filter").serialize();
+    updateUrl = ajaxUrl + "filter/";
+
     updateTable();
 }
 
 function cleanfilter() {
     $(filter).find(":input").val("");
-    mealsFilter = "";
-    updateUrl = "ajax/meals/";
+    updateUrl = ajaxUrl;
     updateTable();
+}
+
+function updateTable() {
+    updateUrl===("ajax/meals/filter/")?$.post(updateUrl, $("#filter").serialize(), function (data){
+        datatableApi.clear().rows.add(data).draw()
+    }):
+        updates(updateUrl);
 }
