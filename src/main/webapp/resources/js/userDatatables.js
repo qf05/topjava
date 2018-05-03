@@ -42,18 +42,17 @@ $(function () {
 });
 
 function check(id, enabled) {
-    var d = 'tr[id=\'' + id + '\']';
-    var s = enabled?"enabled":"disabled";
+    var textEnabled = enabled?"enabled":"disabled";
     $.ajax({
         type: "POST",
         url: ajaxUrl+id,
         data: "enabled="+ enabled,
         success: function () {
-            $(d).attr("data-mealExceed", !enabled);
-            successNoty("User width id = " + id + " is " + s);
+            $('tr[id=\'' + id + '\']').attr("data-mealExceed", !enabled);
+            successNoty("User width id = " + id + " is " + textEnabled);
         },
         error: function () {
-            $(d).find(":input").prop("checked", !enabled);
+            $('tr[id=\'' + id + '\']').find(":input").prop("checked", !enabled);
         }
     });
 }

@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public User changeEnabled(int id, boolean enabled) {
-        User user = repository.get(id);
+        User user = checkNotFoundWithId(repository.get(id), id);
         user.setEnabled(enabled);
         return repository.save(user);
     }
