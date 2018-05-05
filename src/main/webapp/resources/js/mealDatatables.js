@@ -14,13 +14,27 @@ function clearFilter() {
     $.get(ajaxUrl, updateTableByData);
 }
 
+function updates(){
+    if (form.find("input[name='" + "calories" + "']").val().length<1) {
+        form.find("input[name='" + "calories" + "']").val(0)
+    }
+    return form.serialize();
+}
+
 $(function () {
     datatableApi = $("#datatable").DataTable({
+        "ajax": {
+            "url": ajaxUrl,
+            "dataSrc": ""
+        },
         "paging": false,
         "info": true,
         "columns": [
             {
-                "data": "dateTime"
+                "data": "dateTime",
+                "render": function (date, type, row) {
+                    return date.replace("T"," ");
+                }
             },
             {
                 "data": "description"
@@ -29,12 +43,14 @@ $(function () {
                 "data": "calories"
             },
             {
+                "orderable": false,
                 "defaultContent": "Edit",
-                "orderable": false
+                "render": renderEditBtn
             },
             {
-                "defaultContent": "Delete",
-                "orderable": false
+                "orderable": false,
+                "defaultContent": "",
+                "render": renderDeleteBtn
             }
         ],
         "order": [
@@ -42,7 +58,10 @@ $(function () {
                 0,
                 "desc"
             ]
-        ]
+        ],
+        "createdRow": function (row, data, dataIndex) {
+                $(row).attr("data-mealExceed", data.exceed);
+        },
+        "initComplete": makeEditable
     });
-    makeEditable();
 });

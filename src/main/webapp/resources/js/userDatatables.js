@@ -20,6 +20,10 @@ function enable(chkbox, id) {
     });
 }
 
+function updates(){
+    return form.serialize();
+}
+
 // $(document).ready(function () {
 $(function () {
     datatableApi = $("#datatable").DataTable({

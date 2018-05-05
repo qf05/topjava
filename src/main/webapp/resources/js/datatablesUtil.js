@@ -44,7 +44,7 @@ function save() {
     $.ajax({
         type: "POST",
         url: ajaxUrl,
-        data: form.serialize()
+        data: updates()//form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
         updateTable();
