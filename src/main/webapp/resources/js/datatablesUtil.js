@@ -23,6 +23,7 @@ function updateRow(id) {
             form.find("input[name='" + key + "']").val(value);
         });
         $('#editRow').modal();
+        delTInFofm();
     });
 }
 

@@ -1,6 +1,21 @@
 var ajaxUrl = "ajax/profile/meals/";
 var datatableApi;
 
+
+$('#dateTime').datetimepicker({
+    format: 'Y-m-d H:i'
+});
+
+$('#startDate, #endDate').datetimepicker({
+    timepicker: false,
+    format: 'Y-m-d'
+});
+
+$('#startTime, #endTime').datetimepicker({
+    datepicker: false,
+    format: 'H:i'
+});
+
 function updateTable() {
     $.ajax({
         type: "POST",
@@ -18,7 +33,22 @@ function updates(){
     if (form.find("input[name='" + "calories" + "']").val().length<1) {
         form.find("input[name='" + "calories" + "']").val(0)
     }
+    var date = form.find("input[name='" + "dateTime" + "']").val();
+    form.find("input[name='" + "dateTime" + "']").val(setT(date));
     return form.serialize();
+}
+
+function delT(date){
+    return date.replace("T"," ");
+}
+
+function setT(date){
+    return date.replace(" ","T");
+}
+
+function delTInFofm(){
+    var date = $('#editRow').find("input[name='" + "dateTime" + "']").val();
+    $('#editRow').find("input[name='" + "dateTime" + "']").val(delT(date).substring(0,16));
 }
 
 $(function () {
@@ -32,9 +62,7 @@ $(function () {
         "columns": [
             {
                 "data": "dateTime",
-                "render": function (date, type, row) {
-                    return date.replace("T"," ");
-                }
+                "render": delT
             },
             {
                 "data": "description"
