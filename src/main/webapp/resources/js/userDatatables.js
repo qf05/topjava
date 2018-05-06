@@ -23,8 +23,7 @@ function enable(chkbox, id) {
 function updates(){
     return form.serialize();
 }
-function delTInFofm(){
-}
+
 // $(document).ready(function () {
 $(function () {
     datatableApi = $("#datatable").DataTable({

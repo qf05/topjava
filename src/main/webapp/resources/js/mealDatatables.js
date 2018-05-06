@@ -30,25 +30,9 @@ function clearFilter() {
 }
 
 function updates(){
-    if (form.find("input[name='" + "calories" + "']").val().length<1) {
-        form.find("input[name='" + "calories" + "']").val(0)
-    }
     var date = form.find("input[name='" + "dateTime" + "']").val();
-    form.find("input[name='" + "dateTime" + "']").val(setT(date));
+    form.find("input[name='" + "dateTime" + "']").val(date.replace(" ","T"));
     return form.serialize();
-}
-
-function delT(date){
-    return date.replace("T"," ");
-}
-
-function setT(date){
-    return date.replace(" ","T");
-}
-
-function delTInFofm(){
-    var date = $('#editRow').find("input[name='" + "dateTime" + "']").val();
-    $('#editRow').find("input[name='" + "dateTime" + "']").val(delT(date).substring(0,16));
 }
 
 $(function () {
@@ -62,7 +46,12 @@ $(function () {
         "columns": [
             {
                 "data": "dateTime",
-                "render": delT
+                "render": function (date, type, row) {
+                    if (type === "display") {
+                        return date.replace("T"," ").substring(0, 16);
+                    }
+                    return date;
+                }
             },
             {
                 "data": "description"
@@ -72,7 +61,7 @@ $(function () {
             },
             {
                 "orderable": false,
-                "defaultContent": "Edit",
+                "defaultContent": "",
                 "render": renderEditBtn
             },
             {
