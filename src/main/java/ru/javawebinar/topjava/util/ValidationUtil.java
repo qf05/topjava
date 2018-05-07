@@ -53,4 +53,7 @@ public class ValidationUtil {
         }
         return result;
     }
+
+    public interface ValidationStepOne {
+    }
 }

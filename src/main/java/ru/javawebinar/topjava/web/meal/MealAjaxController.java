@@ -4,13 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.Util;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -38,14 +37,14 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Valid MealWithExceed mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(@Validated() Meal mealTo, BindingResult result) {
         if (result.hasErrors()) {
             return Util.handlerError(result);
         }
         if (mealTo.isNew()) {
-            super.create(MealsUtil.createNewFromTo(mealTo));
+            super.create(mealTo);
         } else {
-            super.update(MealsUtil.createNewFromTo(mealTo), mealTo.getId());
+            super.update(mealTo, mealTo.getId());
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
