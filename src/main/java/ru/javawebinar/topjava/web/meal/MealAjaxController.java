@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.Util;
+import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,7 +38,7 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Validated() Meal mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(@Validated(ValidationUtil.ValidationStepOne.class) Meal mealTo, BindingResult result) {
         if (result.hasErrors()) {
             return Util.handlerError(result);
         }

@@ -30,23 +30,23 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET_BETWEEN = "Meal.getBetween";
 
     @Column(name = "date_time", nullable = false)
-    @NotNull
+    @NotNull(groups = {ValidationUtil.ValidationStepOne.class})
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
-    @NotBlank
-    @Size(min = 2, max = 120)
+    @NotBlank(groups = {ValidationUtil.ValidationStepOne.class})
+    @Size(min = 2, max = 120, groups = {ValidationUtil.ValidationStepOne.class})
     private String description;
 
     @Column(name = "calories", nullable = false)
-    @Range(min = 10, max = 5000)
-    @NotNull
+    @Range(min = 10, max = 5000, groups = {ValidationUtil.ValidationStepOne.class})
+    @NotNull(groups = {ValidationUtil.ValidationStepOne.class})
     private Integer calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull(groups = {ValidationUtil.ValidationStepOne.class})
+    @NotNull(groups = {ValidationUtil.ValidationStepTwo.class})
     private User user;
 
     public Meal() {

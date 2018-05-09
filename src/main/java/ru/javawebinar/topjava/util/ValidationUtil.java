@@ -56,4 +56,7 @@ public class ValidationUtil {
 
     public interface ValidationStepOne {
     }
+
+    public interface ValidationStepTwo {
+    }
 }
