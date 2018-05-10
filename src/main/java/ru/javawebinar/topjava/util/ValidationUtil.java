@@ -4,6 +4,8 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.groups.Default;
+
 public class ValidationUtil {
 
     private ValidationUtil() {
@@ -54,9 +56,6 @@ public class ValidationUtil {
         return result;
     }
 
-    public interface ValidationStepOne {
-    }
-
-    public interface ValidationStepTwo {
+    public interface ValidationStepOne extends Default {
     }
 }
