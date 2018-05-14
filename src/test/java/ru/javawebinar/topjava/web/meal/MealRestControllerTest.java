@@ -1,17 +1,24 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -83,6 +90,33 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testUpdateError() throws Exception {
+        Meal updated = getUpdated();
+        updated.setDescription("");
+        MvcResult result = mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("description must not be blank"));
+    }
+
+    @Test
+    public void testUpdateDuplicate() throws Exception {
+        Meal updated = getUpdated();
+        updated.setDateTime(LocalDateTime.of(2015, Month.MAY, 31, 20, 0));
+        MvcResult result = mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isConflict())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("Meal should not be repeated at the same time"));
+    }
+
+    @Test
     public void testCreate() throws Exception {
         Meal created = getCreated();
         ResultActions action = mockMvc.perform(post(REST_URL)
@@ -96,6 +130,33 @@ public class MealRestControllerTest extends AbstractControllerTest {
         assertMatch(returned, created);
         assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL2, created, ADMIN_MEAL1);
     }
+
+    @Test
+    public void testCreateError() throws Exception {
+        Meal created = getCreated();
+        created.setDescription("");
+        MvcResult result = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("description must not be blank"));
+    }
+
+    @Test
+    public void testCreateDuplicate() throws Exception {
+        Meal created = getCreated();
+        created.setDateTime(LocalDateTime.of(2015, Month.MAY, 31, 20, 0));
+        MvcResult result = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isConflict())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("Meal should not be repeated at the same time"));
+    }
+
 
     @Test
     public void testGetAll() throws Exception {

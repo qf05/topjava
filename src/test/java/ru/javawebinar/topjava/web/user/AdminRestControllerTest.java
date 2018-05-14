@@ -1,7 +1,9 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Role;
@@ -89,10 +91,37 @@ public class AdminRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(updated)))
+                .content(jsonWithPassword(updated, "password")))
                 .andExpect(status().isOk());
 
         assertMatch(userService.get(USER_ID), updated);
+    }
+
+    @Test
+    public void testUpdateError() throws Exception {
+        User updated = new User(USER);
+        updated.setName("");
+        MvcResult result = mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(updated, "password")))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("name must not be blank"));
+    }
+
+    @Test
+    public void testUpdateDuplicate() throws Exception {
+        User updated = new User(USER);
+        updated.setName("cwedewd");
+        updated.setEmail(ADMIN.getEmail());
+        MvcResult result =  mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(updated, "password")))
+                .andExpect(status().isConflict())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("User with this email already exists"));
     }
 
     @Test
@@ -109,6 +138,31 @@ public class AdminRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, expected);
         assertMatch(userService.getAll(), ADMIN, expected, USER);
+    }
+
+    @Test
+    public void testCreateError() throws Exception {
+        User expected = new User(null, "New", "", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
+        MvcResult result = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(expected, "newPass")))
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("email must not be blank"));
+    }
+
+    @Test
+    public void testCreateDuplicate() throws Exception {
+        User expected = new User(null, "New", "user@yandex.ru", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
+        MvcResult result = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(expected, "newPass")))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andReturn();
+        Assert.assertTrue(result.getResponse().getContentAsString().contains("User with this email already exists"));
     }
 
     @Test

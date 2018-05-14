@@ -9,13 +9,18 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
         <div class="navbar-brand"><img src="resources/images/icon-meal.png"> <spring:message code="app.title"/></div>
-        <form:form class="form-inline my-2" action="spring_security_check" method="post">
-            <input class="form-control mr-1" type="text" placeholder="Email" name="username">
-            <input class="form-control mr-1" type="password" placeholder="Password" name="password">
-            <button class="btn btn-success" type="submit">
-                <span class="fa fa-sign-in"></span>
-            </button>
-        </form:form>
+        <ul class="nav">
+            <li>
+                <form:form class="form-inline my-2" action="spring_security_check" method="post">
+                    <input class="form-control mr-1" type="text" placeholder="Email" name="username">
+                    <input class="form-control mr-1" type="password" placeholder="Password" name="password">
+                    <button class="btn btn-success" type="submit">
+                        <span class="fa fa-sign-in"></span>
+                    </button>
+                </form:form>
+            </li>
+            <jsp:include page="fragments/locale.jsp"/>
+        </ul>
     </div>
 </nav>
 
@@ -78,6 +83,7 @@
     <c:if test="${not empty param.username}">
     setCredentials("${param.username}", "");
     </c:if>
+
     function setCredentials(username, password) {
         $('input[name="username"]').val(username);
         $('input[name="password"]').val(password);

@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
@@ -60,4 +61,23 @@ public abstract class AbstractUserController {
         log.info((enabled ? "enable " : "disable ") + id);
         service.enable(id, enabled);
     }
+
+    @Transactional
+    public User errCreate(User user){
+        User returned = create(user);
+        service.getAll();
+        return returned;
+    }
+
+    @Transactional
+    public void errUpdate(User user, int id){
+        update(user,id);
+        service.getAll();
+    }
+    @Transactional
+    public void errUpdate(UserTo user, int id){
+        update(user,id);
+        service.getAll();
+    }
+
 }

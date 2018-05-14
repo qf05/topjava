@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web.meal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -72,5 +73,18 @@ public abstract class AbstractMealController {
         return MealsUtil.getFilteredWithExceeded(mealsDateFiltered, AuthorizedUser.getCaloriesPerDay(),
                 orElse(startTime, LocalTime.MIN), orElse(endTime, LocalTime.MAX)
         );
+    }
+
+    @Transactional
+    public Meal errCreate(Meal meal){
+        Meal returned = create(meal);
+        getAll();
+        return returned;
+    }
+
+    @Transactional
+    public void errUpdate(Meal meal, int id){
+        update(meal,id);
+        getAll();
     }
 }
