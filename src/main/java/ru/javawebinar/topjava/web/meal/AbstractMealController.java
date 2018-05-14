@@ -74,17 +74,4 @@ public abstract class AbstractMealController {
                 orElse(startTime, LocalTime.MIN), orElse(endTime, LocalTime.MAX)
         );
     }
-
-    @Transactional
-    public Meal errCreate(Meal meal){
-        Meal returned = create(meal);
-        getAll();
-        return returned;
-    }
-
-    @Transactional
-    public void errUpdate(Meal meal, int id){
-        update(meal,id);
-        getAll();
-    }
 }

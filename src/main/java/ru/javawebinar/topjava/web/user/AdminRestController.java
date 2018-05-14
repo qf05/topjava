@@ -32,7 +32,7 @@ public class AdminRestController extends AbstractUserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
-        User created = super.errCreate(user);
+        User created = super.create(user);
        // super.getAll();
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.setLocation(uriOfNewResource);
@@ -54,7 +54,7 @@ public class AdminRestController extends AbstractUserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void update1(@Valid @RequestBody User user, @PathVariable("id") int id) {
-        super.errUpdate(user, id);
+        super.update(user, id);
         System.out.println();
     }
 

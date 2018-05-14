@@ -61,23 +61,4 @@ public abstract class AbstractUserController {
         log.info((enabled ? "enable " : "disable ") + id);
         service.enable(id, enabled);
     }
-
-    @Transactional
-    public User errCreate(User user){
-        User returned = create(user);
-        service.getAll();
-        return returned;
-    }
-
-    @Transactional
-    public void errUpdate(User user, int id){
-        update(user,id);
-        service.getAll();
-    }
-    @Transactional
-    public void errUpdate(UserTo user, int id){
-        update(user,id);
-        service.getAll();
-    }
-
 }

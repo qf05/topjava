@@ -7,6 +7,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -104,6 +106,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     public void testUpdateDuplicate() throws Exception {
         Meal updated = getUpdated();
         updated.setDateTime(LocalDateTime.of(2015, Month.MAY, 31, 20, 0));
@@ -145,6 +148,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     public void testCreateDuplicate() throws Exception {
         Meal created = getCreated();
         created.setDateTime(LocalDateTime.of(2015, Month.MAY, 31, 20, 0));
