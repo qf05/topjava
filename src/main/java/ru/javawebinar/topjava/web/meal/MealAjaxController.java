@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.http.MediaType;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
@@ -34,12 +33,7 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(@Valid Meal meal, BindingResult result) throws org.springframework.validation.BindException {
-        if (result.hasErrors()) {
-            // TODO change to exception handler
-            throw new org.springframework.validation.BindException(result);
-        }
-
+    public void createOrUpdate(@Valid Meal meal) {
         if (meal.isNew()) {
             super.create(meal);
         } else {

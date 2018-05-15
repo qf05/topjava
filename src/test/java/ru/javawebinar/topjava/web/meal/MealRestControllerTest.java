@@ -109,7 +109,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     public void testUpdateDuplicate() throws Exception {
         Meal updated = getUpdated();
-        updated.setDateTime(LocalDateTime.of(2015, Month.MAY, 31, 20, 0));
+        updated.setDateTime(MEAL5.getDateTime());
         MvcResult result = mockMvc.perform(put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
@@ -151,7 +151,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     public void testCreateDuplicate() throws Exception {
         Meal created = getCreated();
-        created.setDateTime(LocalDateTime.of(2015, Month.MAY, 31, 20, 0));
+        created.setDateTime(MEAL5.getDateTime());
         MvcResult result = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(created))

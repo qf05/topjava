@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,13 +13,12 @@ import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.web.user.AbstractUserController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
-import static ru.javawebinar.topjava.util.exception.ErrorType.DATA_ERROR;
 
 @Controller
 public class RootController extends AbstractUserController {
+
+    private static final String DUPLICATEMESSAGE = "user.email.duplicate";
 
     @GetMapping("/")
     public String root() {
@@ -84,7 +82,7 @@ public class RootController extends AbstractUserController {
                 status.setComplete();
                 return "redirect:login?message=app.registered&username=" + userTo.getEmail();
             } catch (DataIntegrityViolationException e) {
-                result.rejectValue("email", "user.email.duplicate");
+                result.rejectValue("email", DUPLICATEMESSAGE);
                 return "profile";
             }
 

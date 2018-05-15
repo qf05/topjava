@@ -8,3 +8,6 @@
     </ul>
 </li>
 
+<script type="text/javascript">
+    var locale = "${pageContext.response.locale}";
+</script>

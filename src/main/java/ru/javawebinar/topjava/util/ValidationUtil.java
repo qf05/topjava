@@ -71,8 +71,4 @@ public class ValidationUtil {
                 });
         return new ResponseEntity<>(joiner.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
-    public static void errorMessage(Exception e) throws Exception {
-        throw new Exception(e);
-    }
 }
