@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Assume;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -12,7 +14,6 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import static java.time.LocalDateTime.of;
-import static org.hamcrest.core.StringContains.containsString;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -28,9 +29,8 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
-    @Test
+    @Test (expectedExceptions = NotFoundException.class)
     public void deleteNotFound() throws Exception {
-        thrown.expect(NotFoundException.class);
         service.delete(MEAL1_ID, 1);
     }
 
@@ -47,9 +47,8 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
         assertMatch(actual, ADMIN_MEAL1);
     }
 
-    @Test
+    @Test (expectedExceptions = NotFoundException.class)
     public void getNotFound() throws Exception {
-        thrown.expect(NotFoundException.class);
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
@@ -60,13 +59,32 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
+//    Так как нельзя добавить в проверку в expectedExceptionsMessageRegExp ErrorType.DATA_NOT_FOUND,
+//    потому что ему не нравится не финальность сообщения, он не считает его финальным.
+//      По этому использую try/catch
+//      http://qaru.site/questions/427089/testng-how-to-test-for-mandatory-exceptions
+//
+//    private static final String ERROR = ".*"+ ErrorType.DATA_NOT_FOUND.name() +".*" +
+//              NotFoundException.NOT_FOUND_EXCEPTION + ".*" + MEAL1_ID + ".*";
+//
+//    @Test (expectedExceptions = NotFoundException.class,
+//            expectedExceptionsMessageRegExp = ERROR + "")
     @Test
     public void updateNotFound() throws Exception {
-        thrown.expect(NotFoundException.class);
-        thrown.expectMessage(containsString(ErrorType.DATA_NOT_FOUND.name()));
-        thrown.expectMessage(containsString(NotFoundException.NOT_FOUND_EXCEPTION));
-        thrown.expectMessage(containsString(String.valueOf(MEAL1_ID)));
-        service.update(MEAL1, ADMIN_ID);
+//        thrown.expect(NotFoundException.class);
+//        thrown.expectMessage(containsString(ErrorType.DATA_NOT_FOUND.name()));
+//        thrown.expectMessage(containsString(NotFoundException.NOT_FOUND_EXCEPTION));
+//        thrown.expectMessage(containsString(String.valueOf(MEAL1_ID)));
+        try {
+            service.update(MEAL1, ADMIN_ID);
+            Assert.fail();
+        }catch (Exception e){
+            if ((e instanceof NotFoundException) &&
+                    e.getMessage().contains(ErrorType.DATA_NOT_FOUND.name())&&
+                    e.getMessage().contains(NotFoundException.NOT_FOUND_EXCEPTION)&&
+                    e.getMessage().contains(String.valueOf(MEAL1_ID))) {
+            }else Assert.fail();
+        }
     }
 
     @Test
@@ -81,9 +99,10 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
                 LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
     }
 
-    @Test
+    @Test(groups = "not_jdbc")
+    @Transactional(propagation = Propagation.NEVER)
     public void testValidation() throws Exception {
-        Assume.assumeTrue(isJpaBased());
+        Assert.assertTrue(isJpaBased());
         validateRootCause(() -> service.create(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "  ", 300), USER_ID), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new Meal(null, null, "Description", 300), USER_ID), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Description", 9), USER_ID), ConstraintViolationException.class);

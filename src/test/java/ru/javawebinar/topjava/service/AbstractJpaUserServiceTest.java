@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
@@ -16,14 +18,16 @@ abstract public class AbstractJpaUserServiceTest extends AbstractUserServiceTest
     @Autowired
     private JpaUtil jpaUtil;
 
-    @Before
+    @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        if (jpaUtil!=null)
         jpaUtil.clear2ndLevelHibernateCache();
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     public void testValidation() throws Exception {
         validateRootCause(() -> service.create(new User(null, "  ", "invalid@yandex.ru", "password", 2000, Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", 2000, Role.ROLE_USER)), ConstraintViolationException.class);

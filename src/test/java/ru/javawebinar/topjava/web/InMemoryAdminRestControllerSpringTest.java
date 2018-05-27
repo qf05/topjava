@@ -1,12 +1,11 @@
 package ru.javawebinar.topjava.web;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl;
@@ -18,8 +17,7 @@ import java.util.Collection;
 import static ru.javawebinar.topjava.UserTestData.ADMIN;
 
 @ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/mock.xml"})
-@RunWith(SpringRunner.class)
-public class InMemoryAdminRestControllerSpringTest {
+public class InMemoryAdminRestControllerSpringTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private AdminRestController controller;
@@ -27,8 +25,9 @@ public class InMemoryAdminRestControllerSpringTest {
     @Autowired
     private InMemoryUserRepositoryImpl repository;
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
+        if (repository!=null)
         repository.init();
     }
 
@@ -40,7 +39,7 @@ public class InMemoryAdminRestControllerSpringTest {
         Assert.assertEquals(users.iterator().next(), ADMIN);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test (expectedExceptions = NotFoundException.class)
     public void testDeleteNotFound() throws Exception {
         controller.delete(10);
     }

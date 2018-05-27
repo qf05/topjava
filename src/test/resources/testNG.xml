@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="TestSuite">
+    <test name="topjava">
+        <!--<classes>-->
+            <!--<class name="ru.javawebinar.topjava.service.datajpa.DataJpaMealServiceTest" />-->
+        <!--</classes>-->
+        <packages>
+            <package name="ru.javawebinar.topjava.*">
+                <exclude name="ru.javawebinar.topjava.service.jdbc"/>
+            </package>
+        </packages>
+        <classes>
+            <class name="ru.javawebinar.topjava.service.jdbc.JdbcUserServiceTest"/>
+        </classes>
+    </test>
+
+    <test name="jdbcExclude">
+        <groups>
+            <run>
+                <exclude name="not_jdbc" />
+            </run>
+        </groups>
+        <classes>
+            <class name="ru.javawebinar.topjava.service.jdbc.JdbcMealServiceTest"/>
+        </classes>
+    </test>
+</suite>

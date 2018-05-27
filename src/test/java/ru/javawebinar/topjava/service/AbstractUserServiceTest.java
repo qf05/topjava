@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -24,7 +26,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         cacheManager.getCache("users").clear();
     }
@@ -37,7 +39,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         assertMatch(service.getAll(), ADMIN, newUser, USER);
     }
 
-    @Test(expected = DataAccessException.class)
+    @Test(expectedExceptions = DataAccessException.class)
+    @Transactional(propagation = Propagation.NEVER)
     public void duplicateMailCreate() throws Exception {
         service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", 2000, Role.ROLE_USER));
     }
@@ -48,7 +51,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         assertMatch(service.getAll(), ADMIN);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expectedExceptions = NotFoundException.class)
     public void notFoundDelete() throws Exception {
         service.delete(1);
     }
@@ -59,7 +62,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         assertMatch(user, ADMIN);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expectedExceptions = NotFoundException.class)
     public void getNotFound() throws Exception {
         service.get(1);
     }

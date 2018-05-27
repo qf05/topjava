@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.service.datajpa;
 
-import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
+import org.testng.annotations.Test;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.AbstractJpaUserServiceTest;
@@ -19,7 +19,7 @@ public class DataJpaUserServiceTest extends AbstractJpaUserServiceTest {
         MealTestData.assertMatch(admin.getMeals(), MealTestData.ADMIN_MEAL2, MealTestData.ADMIN_MEAL1);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expectedExceptions = NotFoundException.class)
     public void testGetWithMealsNotFound() throws Exception {
         service.getWithMeals(1);
     }

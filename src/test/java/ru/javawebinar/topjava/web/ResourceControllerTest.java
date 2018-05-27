@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.web;
 
-import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.testng.annotations.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
